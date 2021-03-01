@@ -3,7 +3,7 @@
 # Define required raylib variables
 PROJECT_NAME       ?= MOSQUITO_RAMPAGE
 RAYLIB_VERSION     ?= 3.5.0
-RAYLIB_PATH        ?= C:\GitHub\raylib
+RAYLIB_PATH        ?= /home/lauren/prj/raylib/
 
 # Define default options
 
@@ -100,12 +100,12 @@ endif
 
 ifeq ($(PLATFORM),PLATFORM_WEB)
     # Emscripten required variables
-    EMSDK_PATH         ?= C:/emsdk
+    EMSDK_PATH         ?= /home/lauren/prj/emsdk
     EMSCRIPTEN_PATH    ?= $(EMSDK_PATH)/upstream/emscripten
     CLANG_PATH          = $(EMSDK_PATH)/upstream/bin
-    PYTHON_PATH         = $(EMSDK_PATH)/python/3.7.4-pywin32_64bit
-    NODE_PATH           = $(EMSDK_PATH)/node/12.18.1_64bit/bin
-    export PATH         = $(EMSDK_PATH);$(EMSCRIPTEN_PATH);$(CLANG_PATH);$(NODE_PATH);$(PYTHON_PATH);C:\raylib\MinGW\bin:$$(PATH)
+    PYTHON_PATH         = /usr/bin/python
+    NODE_PATH           = $(EMSDK_PATH)/node/14.15.5_64bit/bin
+    export PATH         = $(shell printenv PATH):$(EMSDK_PATH):$(EMSCRIPTEN_PATH):$(CLANG_PATH):$(NODE_PATH):$(PYTHON_PATH)
 endif
 
 # Define raylib release directory for compiled library.
@@ -154,8 +154,9 @@ ifeq ($(PLATFORM),PLATFORM_WEB)
     CC = emcc
 endif
 
-# Define default make program: Mingw32-make
-MAKE = mingw32-make
+# Define default make program: make
+# Modify if you're not on Linux/OSX system
+MAKE = make
 
 ifeq ($(PLATFORM),PLATFORM_DESKTOP)
     ifeq ($(PLATFORM_OS),LINUX)

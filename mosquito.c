@@ -2,6 +2,12 @@
 #include "screens/screens.h"    // NOTE: Defines global variable: currentScreen
 #include <stdio.h>
 
+//#define PLATFORM_WEB
+
+#if defined(PLATFORM_WEB)
+    #include <emscripten.h>
+#endif
+
 GameScreen currentScreen = 0;
 Sound point = { 0 };
 Sound spraySound = { 0 };
@@ -58,6 +64,10 @@ int main(void)
     // Setup and Init first screen
     currentScreen = LOGO;
     InitLogoScreen();
+#if defined(PLATFORM_WEB)
+    UpdateMusicStream(ambient);
+    emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
+#else
     SetTargetFPS(60);   // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
@@ -67,6 +77,7 @@ int main(void)
         UpdateDrawFrame();
         UpdateMusicStream(ambient);
     }
+#endif
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
