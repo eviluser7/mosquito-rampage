@@ -5,7 +5,6 @@
 Texture2D protagonist;
 Texture2D background;
 static int finishScreen;
-float version = 2.1;
 
 // Initialize title screen
 void InitTitleScreen(void)
@@ -54,7 +53,7 @@ void DrawTitleScreen(void)
         if (ClickGuiButton((Rectangle){ 20, 620, 340, 80 }, "Phone Mode: On")) phoneMode = false;
     }
 
-    DrawText(FormatText("v%.1f", version), 30, 10, 48, WHITE);
+    DrawText("2.1.1", 30, 10, 48, WHITE);
 }
 
 // Unload title screen

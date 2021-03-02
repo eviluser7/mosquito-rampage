@@ -215,23 +215,26 @@ void DrawGameplayScreen(void)
 
     // Mobile controls
     // Player movement logic
-    if (HoldGuiButton((Rectangle){ 20, BUTTON_HEIGHT, 150, 150 }, "") &&
-        playerPosition.x > GetScreenWidth() - 1255 && gameBegan) playerPosition.x -= 10;
-
-    if (HoldGuiButton((Rectangle){ 190, BUTTON_HEIGHT, 150, 150 }, "") &&
-        playerPosition.x < GetScreenWidth() - 205 && gameBegan) playerPosition.x += 10;
-
-    if (ClickGuiButton((Rectangle){ 1120, BUTTON_HEIGHT, 150, 150 }, "") &&
-        !sprayWasShot && sprayPosition.y > SPRAY_HEIGHT_LIMIT && sprayLimit > 0)
+    if (phoneMode)
     {
-        PlaySound(spraySound);
-        sprayWasShot = true;
-        if (sprayLimit > -1) sprayLimit -= 15;
+        if (HoldGuiButton((Rectangle){ 20, BUTTON_HEIGHT, 150, 150 }, "") &&
+            playerPosition.x > GetScreenWidth() - 1255 && gameBegan) playerPosition.x -= 10;
+
+        if (HoldGuiButton((Rectangle){ 210, BUTTON_HEIGHT, 150, 150 }, "") &&
+            playerPosition.x < GetScreenWidth() - 205 && gameBegan) playerPosition.x += 10;
+
+        if (ClickGuiButton((Rectangle){ 1100, BUTTON_HEIGHT, 150, 150 }, "") &&
+            !sprayWasShot && sprayPosition.y > SPRAY_HEIGHT_LIMIT && sprayLimit > 0)
+        {
+            PlaySound(spraySound);
+            sprayWasShot = true;
+            if (sprayLimit > -1) sprayLimit -= 15;
+        }
+        DrawTexture(arrowLeft, 20, BUTTON_HEIGHT, WHITE);
+        DrawTexture(arrowRight, 210, BUTTON_HEIGHT, WHITE);
+        DrawTexture(sprayButton, 1100, BUTTON_HEIGHT, WHITE);
     }
 
-    DrawTexture(arrowLeft, 20, BUTTON_HEIGHT, WHITE);
-    DrawTexture(arrowRight, 190, BUTTON_HEIGHT, WHITE);
-    DrawTexture(sprayButton, 1120, BUTTON_HEIGHT, WHITE);
 }
 
 // Unload gameplay screen
