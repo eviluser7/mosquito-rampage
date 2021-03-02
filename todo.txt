@@ -1,0 +1,8 @@
+[X] buff mosquitos
+[X] fix mosquitos are there when reseting level
+[X] add version text on title screen
+[X] add buttons
+[X] change mission screen to match new controls (depends on phone mode on or not)
+[X] add phone mode for mobile users
+[X] fix music not playing on web
+[] compile with changes

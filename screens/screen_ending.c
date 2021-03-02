@@ -19,7 +19,7 @@ void UpdateEndingScreen(void)
 {
     StopMusicStream(ambient);
 
-    if (IsKeyPressed(KEY_L)) finishScreen = 1;
+    if (IsKeyPressed(KEY_L) || IsGestureDetected(GESTURE_TAP)) finishScreen = 1;
 }
 
 // Draw ending screen
@@ -40,7 +40,8 @@ void DrawEndingScreen(void)
     }
 
     // General texts
-    DrawText("Press L to leave.", SCREEN_WIDTH/2-140, 650, 36, WHITE);
+    if (!phoneMode) DrawText("Press L to leave.", SCREEN_WIDTH/2-140, 650, 36, WHITE);
+    else DrawText("Tap anywhere to leave.", SCREEN_WIDTH/2-180, 650, 36, WHITE);
 }
 
 // Unload ending screen

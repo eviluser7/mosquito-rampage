@@ -8,12 +8,16 @@
     #include <emscripten.h>
 #endif
 
+// Variables from screens.h file
 GameScreen currentScreen = 0;
 Sound point = { 0 };
 Sound spraySound = { 0 };
 Sound hitSound = { 0 };
 Music ambient = { 0 };
+Texture2D texNPatch = { 0 };
+NPatchInfo npInfo = { 0 };
 int result = 0;
+bool phoneMode = true;
 
 //----------------------------------------------------------------------------------
 // Global Variables Definition (local to this module)
@@ -56,7 +60,15 @@ int main(void)
     point = LoadSound("resources/sfx_point.wav");
     spraySound = LoadSound("resources/sfx_spray.wav");
     hitSound = LoadSound("resources/sfx_hit.wav");
-    ambient = LoadMusicStream("resources/music_ambient.wav");
+    ambient = LoadMusicStream("resources/music_ambient.ogg");
+
+    texNPatch = LoadTexture("resources/npatch.png");
+    npInfo.source = (Rectangle){ 0, 0, texNPatch.width, texNPatch.height};
+    npInfo.left = 30;
+    npInfo.top = 30;
+    npInfo.right = 30;
+    npInfo.bottom = 30;
+
     result = 0;
 
     SetMusicVolume(ambient, 0.5f);
@@ -103,6 +115,49 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     return 0;
+}
+
+// Previously declared in screens.h
+bool ClickGuiButton(Rectangle bounds, char *text)
+{
+    bool pressed = false;
+    
+    Vector2 mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, bounds))
+    {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_TAP))
+        {
+            pressed = true;
+        }
+    }
+
+    // Draw button
+    DrawTextureNPatch(texNPatch, npInfo, bounds, (Vector2){ 0.0f, 0.0f }, 0.0f, WHITE);
+    DrawText(text, bounds.x+bounds.width/2-152, bounds.y+bounds.height/2-15, 34, BLACK);
+
+    return pressed;
+}
+
+bool HoldGuiButton(Rectangle bounds, char *text)
+{
+    bool pressed = false;
+
+    Vector2 mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, bounds))
+    {
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_HOLD)) pressed = true;
+        else pressed = false;
+    }
+
+    // Draw button
+    DrawTextureNPatch(texNPatch, npInfo, bounds, (Vector2){ 0.0f, 0.0f }, 0.0f, WHITE);
+    DrawText(text, bounds.x+bounds.width/2-152, bounds.y+bounds.height/2-15, 34, BLACK);
+
+    return pressed;
 }
 
 //----------------------------------------------------------------------------------

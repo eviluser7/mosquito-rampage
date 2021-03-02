@@ -15,10 +15,15 @@ extern Sound point;
 extern Sound spraySound;
 extern Sound hitSound;
 extern Music ambient;
+extern bool phoneMode;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Buttons
+bool ClickGuiButton(Rectangle bounds, char *text);
+bool HoldGuiButton(Rectangle bounds, char *text);
 
 // Logo screen function declarations
 void InitLogoScreen(void);

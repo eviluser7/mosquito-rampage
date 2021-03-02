@@ -15,6 +15,7 @@ typedef struct {
 } Mosquito;
 
 // Function declarations
+void InitMosquito(void);
 void SpawnMosquito(void);
 void DrawMosquito(void);
 void UpdateMosquito(void);
@@ -27,6 +28,10 @@ static int framesMosquitoCounter;
 static int framesCounter;
 Texture2D gameBackground;
 Texture2D gameObjective;
+Texture2D gameObjectiveMobile;
+Texture2D arrowLeft;
+Texture2D arrowRight;
+Texture2D sprayButton;
 Texture2D uiElement;
 Texture2D player;
 Texture2D spray;
@@ -56,18 +61,22 @@ void InitGameplayScreen(void)
     playerHealth = 3;
     sprayWasShot = false;
     sprayLimit = 100;
-    enemies[MAX_ENEMY_NUM].isAlive = false;
+    InitMosquito();
     mosquitoCounter = 0;
     gameBegan = false;
 
     gameBackground = LoadTexture("resources/background.png");
     gameObjective = LoadTexture("resources/objective.png");
+    gameObjectiveMobile = LoadTexture("resources/objectiveMobile.png");
     player = LoadTexture("resources/player.png");
     spray = LoadTexture("resources/spray.png");
     mosquitoTexture = LoadTexture("resources/mosquito.png");
     uiElement = LoadTexture("resources/ui_element.png");
     sprayBottle = LoadTexture("resources/sprayBottle.png");
     health = LoadTexture("resources/health.png");
+    arrowLeft = LoadTexture("resources/arrowLeft.png");
+    arrowRight = LoadTexture("resources/arrowRight.png");
+    sprayButton = LoadTexture("resources/shootButton.png");
 }
 
 // Update gameplay screen
@@ -77,18 +86,23 @@ void UpdateGameplayScreen(void)
     // Do all of the things below if the game started
     if (gameBegan)
     {
-        // Player movement logic
-        if (IsKeyDown(KEY_A) && playerPosition.x > GetScreenWidth() - 1255 && gameBegan) playerPosition.x -= 10;
-        if (IsKeyDown(KEY_D) && playerPosition.x < GetScreenWidth() - 205 && gameBegan) playerPosition.x += 10;
-
-        // Spray shooting logic
-        if (IsKeyPressed(KEY_L) && !sprayWasShot && sprayPosition.y > SPRAY_HEIGHT_LIMIT &&
-            sprayLimit > 0)
+        if (!phoneMode)
         {
-            PlaySound(spraySound);
-            sprayWasShot = true;
-            if (sprayLimit > -1) sprayLimit -= 15;
+            // Player movement logic
+            if (IsKeyDown(KEY_A) && playerPosition.x > GetScreenWidth() - 1255 && gameBegan) playerPosition.x -= 10;
+            if (IsKeyDown(KEY_D) && playerPosition.x < GetScreenWidth() - 205 && gameBegan) playerPosition.x += 10;
+
+            // Spray shooting logic
+            if (IsKeyPressed(KEY_L) && !sprayWasShot && sprayPosition.y > SPRAY_HEIGHT_LIMIT &&
+                sprayLimit > 0)
+            {
+                PlaySound(spraySound);
+                sprayWasShot = true;
+                if (sprayLimit > -1) sprayLimit -= 15;
+            }
         }
+
+        // Normal game logic
         if (sprayWasShot) sprayPosition.y -= 20;
 
         if (sprayPosition.y < SPRAY_HEIGHT_LIMIT) sprayWasShot = false;
@@ -192,7 +206,31 @@ void DrawGameplayScreen(void)
 
 
     // Draw mission
-    if (!gameBegan) DrawTexture(gameObjective, 0, 0, WHITE);
+    if (!gameBegan)
+    {
+        if (!phoneMode) DrawTexture(gameObjective, 0, 0, WHITE);
+        else DrawTexture(gameObjectiveMobile, 0, 0, WHITE);
+    }
+
+    // Mobile controls
+    // Player movement logic
+    if (HoldGuiButton((Rectangle){ 20, 590, 100, 100 }, "") &&
+        playerPosition.x > GetScreenWidth() - 1255 && gameBegan) playerPosition.x -= 10;
+
+    if (HoldGuiButton((Rectangle){ 190, 590, 100, 100 }, "") &&
+        playerPosition.x < GetScreenWidth() - 205 && gameBegan) playerPosition.x += 10;
+
+    if (ClickGuiButton((Rectangle){ 1120, 590, 100, 100 }, "") &&
+        !sprayWasShot && sprayPosition.y > SPRAY_HEIGHT_LIMIT && sprayLimit > 0)
+    {
+        PlaySound(spraySound);
+        sprayWasShot = true;
+        if (sprayLimit > -1) sprayLimit -= 15;
+    }
+
+    DrawTexture(arrowLeft, 20, 590, WHITE);
+    DrawTexture(arrowRight, 190, 590, WHITE);
+    DrawTexture(sprayButton, 1120, 590, WHITE);
 }
 
 // Unload gameplay screen
@@ -200,12 +238,16 @@ void UnloadGameplayScreen(void)
 {
     UnloadTexture(gameBackground);
     UnloadTexture(gameObjective);
+    UnloadTexture(gameObjectiveMobile);
     UnloadTexture(player);
     UnloadTexture(spray);
     UnloadTexture(mosquitoTexture);
     UnloadTexture(uiElement);
     UnloadTexture(sprayBottle);
     UnloadTexture(health);
+    UnloadTexture(arrowLeft);
+    UnloadTexture(arrowRight);
+    UnloadTexture(sprayButton);
 }
 
 // Should gameplay screen finish?
@@ -215,6 +257,11 @@ int FinishGameplayScreen(void)
 }
 
 // Module functions
+void InitMosquito(void)
+{
+    for (int i = 0; i < MAX_ENEMY_NUM; i++) enemies[i].isAlive = false;
+}
+
 void SpawnMosquito(void)
 {
     for (int i = 0; i < MAX_ENEMY_NUM; i++)
@@ -249,8 +296,8 @@ void UpdateMosquito(void)
 
             // Movement logic
             float velX = 5.0;
-            float velY = 3.0;
-            enemies[i].position.x = enemies[i].position.x + velX*direction;
+            float velY = 4.0;
+            enemies[i].position.x = enemies[i].position.x + velX*direction*2;
             enemies[i].position.y = enemies[i].position.y + velY;
 
         }
