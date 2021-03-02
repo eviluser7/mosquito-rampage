@@ -7,6 +7,7 @@
 #define MAX_ENEMY_NUM       12
 #define TIME_LIMIT_SECONDS  180
 #define TARGET_ENEMY_NUM    100
+#define BUTTON_HEIGHT       540
 
 // Structures
 typedef struct {
@@ -214,13 +215,13 @@ void DrawGameplayScreen(void)
 
     // Mobile controls
     // Player movement logic
-    if (HoldGuiButton((Rectangle){ 20, 590, 100, 100 }, "") &&
+    if (HoldGuiButton((Rectangle){ 20, BUTTON_HEIGHT, 150, 150 }, "") &&
         playerPosition.x > GetScreenWidth() - 1255 && gameBegan) playerPosition.x -= 10;
 
-    if (HoldGuiButton((Rectangle){ 190, 590, 100, 100 }, "") &&
+    if (HoldGuiButton((Rectangle){ 190, BUTTON_HEIGHT, 150, 150 }, "") &&
         playerPosition.x < GetScreenWidth() - 205 && gameBegan) playerPosition.x += 10;
 
-    if (ClickGuiButton((Rectangle){ 1120, 590, 100, 100 }, "") &&
+    if (ClickGuiButton((Rectangle){ 1120, BUTTON_HEIGHT, 150, 150 }, "") &&
         !sprayWasShot && sprayPosition.y > SPRAY_HEIGHT_LIMIT && sprayLimit > 0)
     {
         PlaySound(spraySound);
@@ -228,9 +229,9 @@ void DrawGameplayScreen(void)
         if (sprayLimit > -1) sprayLimit -= 15;
     }
 
-    DrawTexture(arrowLeft, 20, 590, WHITE);
-    DrawTexture(arrowRight, 190, 590, WHITE);
-    DrawTexture(sprayButton, 1120, 590, WHITE);
+    DrawTexture(arrowLeft, 20, BUTTON_HEIGHT, WHITE);
+    DrawTexture(arrowRight, 190, BUTTON_HEIGHT, WHITE);
+    DrawTexture(sprayButton, 1120, BUTTON_HEIGHT, WHITE);
 }
 
 // Unload gameplay screen

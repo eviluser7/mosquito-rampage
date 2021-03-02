@@ -5,7 +5,7 @@
 Texture2D protagonist;
 Texture2D background;
 static int finishScreen;
-float version = 2.0;
+float version = 2.1;
 
 // Initialize title screen
 void InitTitleScreen(void)
